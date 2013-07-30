@@ -70,23 +70,23 @@ require_once (MODX_CORE_PATH . 'components/debugtoolbar/vendors/TextHighlighter/
 
             $headers = '';
             $hi = 0;
-	          if (!function_exists('getallheaders')) {
-			        foreach ($_SERVER as $key => $value) {
-				        if (substr($key, 0, 5) == 'HTTP_') {
-					        $headers .= $modx->getChunk($kv_tpl, array(
-						        'idx' => $hi,
-						        'key' => str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5))))),
-						        'value' => $value,
-					        ));
+              if (!function_exists('getallheaders')) {
+                    foreach ($_SERVER as $key => $value) {
+                        if (substr($key, 0, 5) == 'HTTP_') {
+                            $headers .= $modx->getChunk($kv_tpl, array(
+                                'idx' => $hi,
+                                'key' => str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5))))),
+                                'value' => $value,
+                            ));
                   $hi++;
-				        }
-			        }
-		        } else {
-			        foreach (getallheaders() as $key => $value) {
-				        $headers .= $modx->getChunk($kv_tpl, array('idx' => $hi, 'key' => $key, 'value' => $value));
-				        $hi++;
-			        }
-		        }
+                        }
+                    }
+                } else {
+                    foreach (getallheaders() as $key => $value) {
+                        $headers .= $modx->getChunk($kv_tpl, array('idx' => $hi, 'key' => $key, 'value' => $value));
+                        $hi++;
+                    }
+                }
 
             $panels['headers'] = $modx->getChunk($headers_tpl, array('headers' => $headers));
 
@@ -131,7 +131,7 @@ require_once (MODX_CORE_PATH . 'components/debugtoolbar/vendors/TextHighlighter/
             $totalCount = 0;
             foreach(self::$petCount as $id => $item) {
                 $totalCount += $item['count'];
-                $content = htmlentities($item['content']);
+                $content = (isset($item) && isset($item['content']) ? ($item['content']) : '');
                 $paProperties = array(
                     'id' => $id,
                     'idx' => $pi,
@@ -162,6 +162,7 @@ require_once (MODX_CORE_PATH . 'components/debugtoolbar/vendors/TextHighlighter/
             }
 
             $nav = array();
+            $panels_output = $nav_output = $output = '';
 
             foreach ($panels as $title => $value) {
                 $nav[] = array(

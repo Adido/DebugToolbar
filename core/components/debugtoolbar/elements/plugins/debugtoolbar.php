@@ -29,13 +29,14 @@ if ($modx->event->name == 'OnHandleRequest'){
 }
 
 if ($modx->event->name == 'OnParseDocument'){
-	if (isset(DebugToolbar::$petCount[md5($content)])){
-		DebugToolbar::$petCount[md5($content)]['count'] ++;
+	$hash = md5($content);
+	if (isset(DebugToolbar::$petCount[$hash])){
+		DebugToolbar::$petCount[$hash]['count'] ++;
 	}else{
-		DebugToolbar::$petCount[md5($content)] = array('count' => 1);
+		DebugToolbar::$petCount[$hash] = array('count' => 1);
 	}
-	if (DebugToolbar::$petCount[md5($content)]['count'] > 20){
-		DebugToolbar::$petCount[md5($content)]['content'] = $content;
+	if (DebugToolbar::$petCount[$hash]['count'] > 20){
+		DebugToolbar::$petCount[$hash]['content'] = $content;
 	}
 }
 
